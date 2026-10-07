@@ -23,23 +23,27 @@ h1, h2, h3, h4, h5, h6, p {
     border-radius: 25px;
     border: 1px solid #D9D4CC;
     padding: 20px;
-
+    box-sizing: border-box;
     &:focus{
         outline: 0;
     }
 }
 
 .button{
+    cursor: pointer;
     width: fit-content;
     padding: 20px;
     border-radius: 25px;
     border: 1px solid #D9D4CC;
     background-color: #fff;
     color: #0B1F3A;
-
     transition: 0.2s ease-in-out;
 
     &:focus{
+        background-color: #0B1F3A;
+        color: #fff;
+    }
+    &:hover{
         background-color: #0B1F3A;
         color: #fff;
     }
@@ -260,6 +264,12 @@ section {
     border-radius: 20px;
 }
 
+.event-card-countgroup{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .event-card-button{
     background-color: #F7F5F0;
     color: #C62828;
@@ -362,7 +372,7 @@ section {
 
 /* detail page */
 .events-detail-section{
-    --section-width:14  00px;
+    --section-width:1300px;
 }
 
 .event-detail-layout{
@@ -374,11 +384,12 @@ section {
 
 .event-card-detail{
     background-color: white;
-    max-width: 250px;
+    max-width: 350px;
     width: 100%;
     border-radius: 25px;
     border: 1px solid #D9D4CC;
-    margin: 20px;
+    margin: 10px;
+    height: fit-content;
 }
 
 .event-card-content-detail{
@@ -399,7 +410,7 @@ section {
     color: #000000;
     font-weight: 600;
     width: fit-content;
-    padding: 10px;
+    padding: 15px;
     border-radius: 20px;
     border: 0;
     transition: 0.2s ease-in-out;
@@ -420,24 +431,79 @@ section {
     display: flex;
     flex-direction: column;
     flex: 1;
+    margin-bottom: 40px;
 }
 
 .detail{
     display: flex;
+    flex-direction: column;
     margin: 10px;
     padding: 20px;
     background-color: #fff;
     border: 1px solid #D9D4CC;
     border-radius: 25px;
+    flex: 1;
+    font-size: 18px;
 }
 
 
-.event-detail-description{
-
+.event-detail-description-title,
+.event-detail-location-title,
+.event-detail-datetime-title,
+.event-detail-organisation-title,
+.event-detail-organisator,
+.event-detail-organisator-info,
+.event-detail-contact,
+.event-detail-contact-info,
+.event-detail-group,
+.event-detail-group-info,
+.event-detail-costs,
+.event-detail-button-text{
+    margin-bottom: 15px;
 }
+
+.event-detail-signup{
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 25px;
+    flex: 1;
+    font-size: 18px;
+}
+
+.event-detail-button{
+    margin: 10px 0 10px;
+    cursor: pointer;
+    width: fit-content;
+    padding: 20px;
+    border-radius: 25px;
+    border: 1px solid #D9D4CC;
+    background-color: #0B1F3A;
+    color: #fff;
+    transition: 0.2s ease-in-out;
+    font-size: 24px;
+
+    &:hover{
+        background-color: #ffffff;
+        color: #0B1F3A;
+    }
+}
+
+
 .event-detail-locationdate{
-
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+    flex: 1;
 }
+
+.event-detail-location-title{
+    margin-bottom: 25px;
+}
+
+/*
 .event-detail-location{
 
 }
@@ -451,4 +517,18 @@ section {
 
 .event-detail-organisation{
 
+} */
+
+
+.event-detail-events{
+    margin-top: 20px;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
 }
+.event-detail-events-title{
+    position: relative;
+    left: 2.5%;
+}
+
