@@ -23,7 +23,7 @@ h1, h2, h3, h4, h5, h6, p {
     border-radius: 25px;
     border: 1px solid #D9D4CC;
     padding: 20px;
-
+    box-sizing: border-box;
     &:focus{
         outline: 0;
     }
@@ -264,6 +264,12 @@ section {
     border-radius: 20px;
 }
 
+.event-card-countgroup{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
 .event-card-button{
     background-color: #F7F5F0;
     color: #C62828;
@@ -378,7 +384,7 @@ section {
 
 .event-card-detail{
     background-color: white;
-    max-width: 250px;
+    max-width: 350px;
     width: 100%;
     border-radius: 25px;
     border: 1px solid #D9D4CC;
@@ -425,6 +431,7 @@ section {
     display: flex;
     flex-direction: column;
     flex: 1;
+    margin-bottom: 40px;
 }
 
 .detail{
@@ -436,6 +443,7 @@ section {
     border: 1px solid #D9D4CC;
     border-radius: 25px;
     flex: 1;
+    font-size: 18px;
 }
 
 
@@ -449,25 +457,36 @@ section {
 .event-detail-contact-info,
 .event-detail-group,
 .event-detail-group-info,
-.event-detail-costs{
+.event-detail-costs,
+.event-detail-button-text{
     margin-bottom: 15px;
 }
 
-.event-detail-button{
+.event-detail-signup{
+    display: flex;
+    flex-direction: column;
     margin: 10px;
+    padding: 20px;
+    border-radius: 25px;
+    flex: 1;
+    font-size: 18px;
+}
+
+.event-detail-button{
+    margin: 10px 0 10px;
     cursor: pointer;
     width: fit-content;
     padding: 20px;
     border-radius: 25px;
     border: 1px solid #D9D4CC;
-    background-color: #fff;
+    background-color: #0B1F3A;
+    color: #fff;
     transition: 0.2s ease-in-out;
-    font-weight: bold;
     font-size: 24px;
 
     &:hover{
-        background-color: #0B1F3A;
-        color: #fff;
+        background-color: #ffffff;
+        color: #0B1F3A;
     }
 }
 
@@ -484,8 +503,8 @@ section {
     margin-bottom: 25px;
 }
 
-
-/* .event-detail-location{
+/*
+.event-detail-location{
 
 }
 .event-detail-datetime{
@@ -499,3 +518,17 @@ section {
 .event-detail-organisation{
 
 } */
+
+
+.event-detail-events{
+    margin-top: 20px;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+}
+.event-detail-events-title{
+    position: relative;
+    left: 2.5%;
+}
+
