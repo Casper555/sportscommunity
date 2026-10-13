@@ -61,7 +61,7 @@ $events = getUpcomingEvents($pdo, 3);
                 </div>
             </section>
             <section class="section section-homepage-catagories">
-                <h1 class="homepage-catagories-title">Catagoriën</h1>
+                <h1 class="homepage-catagories-title">Catagorieën</h1>
                 <div class="homepage-catagories-cards-wrap">
                     <a href="./events.php" class="catagories-card">
                         <img class="event-card-image" src="../assets/images/judo.jpeg">
