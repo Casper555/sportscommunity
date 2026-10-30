@@ -1,20 +1,30 @@
 <?php
-function getUpcomingEvents(PDO $pdo, int $limit = 3): array 
+function getUpcomingEvents(PDO $pdo, int $limit = 3, ?int $excludeId = null): array 
 {
-    $stmt = $pdo->prepare("
+    $sql = "
         SELECT e.*, COUNT(r.id) AS registration_count 
         FROM events e 
-        LEFT JOIN registrations r ON e.id = r.event_id 
-        GROUP BY e.id 
-        ORDER BY e.event_date ASC 
-        LIMIT :limit
-    ");
-    
+        LEFT JOIN registrations r ON e.id = r.event_id
+    ";
+
+    $params = [];
+    if ($excludeId !== null) {
+        $sql .= " WHERE e.id != :exclude_id";
+        $params[':exclude_id'] = $excludeId;
+    }
+
+    $sql .= " GROUP BY e.id ORDER BY e.event_date ASC LIMIT :limit";
+
+    $stmt = $pdo->prepare($sql);
+
+    // Bind parameters safely
+    if ($excludeId !== null) {
+        $stmt->bindValue(':exclude_id', $excludeId, PDO::PARAM_INT);
+    }
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->execute();
-    
-    return $stmt->fetchAll();
 
+    return $stmt->fetchAll();
 }
 
 function getAllEvents(PDO $pdo, ?string $type = null, ?string $search = null): array 
@@ -34,11 +44,12 @@ function getAllEvents(PDO $pdo, ?string $type = null, ?string $search = null): a
     }
 
     if (!empty($search)) {
-        $where[] = "(e.title LIKE :s_title OR e.city LIKE :s_city OR e.organizer_name LIKE :s_org)";
+        $where[] = "(e.title LIKE :s_title OR e.city LIKE :s_city OR e.organizer_name LIKE :s_org OR e.contact_person LIKE :s_person)";
         $searchTerm = '%' . $search . '%';
         $params[':s_title'] = $searchTerm;
         $params[':s_city']  = $searchTerm;
         $params[':s_org']   = $searchTerm;
+        $params[':s_person']   = $searchTerm;
     }
 
     if (!empty($where)) {
@@ -251,4 +262,16 @@ function updateEvent(PDO $pdo, int $eventId, int $userId, array $data): bool
         ':price'                 => $data['price'],
         ':registration_deadline' => $data['registration_deadline']
     ]);
+}
+
+function getEventParticipants(PDO $pdo, int $eventId): array {
+    $stmt = $pdo->prepare("
+        SELECT u.username, u.email, r.registration_date 
+        FROM users u
+        JOIN registrations r ON u.id = r.user_id
+        WHERE r.event_id = :event_id
+        ORDER BY r.registration_date ASC
+    ");
+    $stmt->execute([':event_id' => $eventId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }

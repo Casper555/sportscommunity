@@ -11,7 +11,7 @@ if (!$eventId) {
     exit;
 }
 
-$event = getEventById($pdo, (int)$eventId); 
+$event = getEventById($pdo, (int)$eventId);
 
 if (!$event) {
     header('Location: events.php');
@@ -51,8 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// 4. Fetch other upcoming events
-$newevents = getUpcomingEvents($pdo, 3);
+// 4. Fetch other upcoming events (excluding the current one)
+$newevents = getUpcomingEvents($pdo, 3, $event['id']);
 
 // 5. Check user status relative to this event
 $isRegistered = false;
@@ -81,7 +81,7 @@ if ($userId) {
         <?php include '../includes/header.php'; ?>
         <main>
             <section class="section events-detail-section">
-                
+
                 <!-- Back Link -->
                 <div class="back-navigation">
                     <a href="events.php" class="back-link">&larr; Terug naar overzicht</a>
@@ -150,6 +150,9 @@ if ($userId) {
 
                             <?php if ($isOwner): ?>
                                 <p class="event-detail-button-text">Dit evenement is door jou georganiseerd.</p>
+                                <a href="participants.php?id=<?= $event['id'] ?>" class="event-detail-button" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px;">
+                                    <i class="fa fa-users"></i> Bekijk inschrijvingen (<?= $event['registration_count'] ?>)
+                                </a>
                             <?php elseif ($isRegistered): ?>
                                 <p class="event-detail-button-text">Je bent momenteel ingeschreven voor dit evenement.</p>
                                 <form method="POST" action="event-detail.php?id=<?= $event['id'] ?>">

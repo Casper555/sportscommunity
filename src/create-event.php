@@ -251,7 +251,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['create_event'])) {
         </main>
         <?php include '../includes/footer.php'; ?>
     </div>
-    <script src="../assets/js/main.js"></script>
 </body>
 
 </html>

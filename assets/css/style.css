@@ -1072,6 +1072,12 @@ input[type="date"] {
     color: #606B78;
 }
 
+.profile-buttons{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
 .profile-created-action-link {
     background: #0B1F3A;
     color: #fff;
@@ -1081,6 +1087,10 @@ input[type="date"] {
     font-size: 0.85rem;
     font-weight: 500;
     display: inline-block;
+}
+.profile-edit{
+    background-color: #fff;
+    color: #0B1F3A;
 }
 
 .alert-success {
@@ -1101,4 +1111,95 @@ input[type="date"] {
     border-radius: 5px;
     margin-bottom: 20px;
     text-align: center;
+}
+
+
+/* participants */
+.participants-back-nav {
+    margin-bottom: 20px;
+}
+
+.participants-intro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.participants-count-text {
+    color: #606B78;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.participants-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1px solid #D9D4CC;
+    border-radius: 20px;
+    padding: 25px;
+    margin-top: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.participants-card-title {
+    margin-top: 0;
+    color: #0B1F3A;
+    font-size: 1.2rem;
+}
+
+.participants-card-desc {
+    color: #606B78;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+}
+
+.participants-empty {
+    color: #606B78;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.participants-table-wrapper {
+    overflow-x: auto;
+}
+
+.participants-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.participants-table th {
+    padding: 12px 15px;
+    border-bottom: 2px solid #EAE6DF;
+    color: #606B78;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.participants-table td {
+    padding: 15px;
+}
+
+.participants-table tr {
+    border-bottom: 1px solid #F0EEE8;
+    transition: background 0.2s;
+}
+
+.participant-name {
+    font-weight: 600;
+    color: #0B1F3A;
+}
+
+.participant-email,
+.participant-date {
+    color: #606B78;
+}
+
+.participant-date {
+    font-size: 0.9rem;
 }

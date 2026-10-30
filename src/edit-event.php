@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_event'])) {
             'target_group'         => $targetGroup,
             'max_participants'     => $maxParticipants,
             'price'                => $price,
-            'registration_deadline'=> $registrationDeadline
+            'registration_deadline' => $registrationDeadline
         ];
 
         if (updateEvent($pdo, (int)$eventId, (int)$userId, $eventData)) {
@@ -119,6 +119,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_event'])) {
         <?php include '../includes/header.php'; ?>
         <main>
             <section class="section login-section">
+                <div class="back-navigation">
+                    <a href="profile.php" class="back-link">&larr; Terug naar profiel</a>
+                </div>
                 <h1 class="title login-title">Evenement bewerken</h1>
                 <p class="content login-subtitle">Pas de gegevens van je evenement hieronder aan.</p>
 

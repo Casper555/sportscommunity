@@ -10,7 +10,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </a>
         <?php if (isset($_SESSION['user_id'])): ?>
             <span class="header-welcome">
-                <?= htmlspecialchars($_SESSION['username'] ?? 'gebruiker') ?>
+                <?= htmlspecialchars(ucwords($_SESSION['username'] ?? 'gebruiker')) ?>
             </span>
         <?php endif; ?>
     </div>

@@ -23,12 +23,14 @@ $events = getAllEvents($pdo, $type, $search);
         <?php include '../includes/header.php'; ?>
         <main>
             <section class="section events-section">
+                <div class="back-navigation">
+                    <a href="index.php" class="back-link">&larr; Terug naar Home</a>
+                </div>
                 <div class="events-intro">
                     <h1 class="title events-title">Zoek evenementen</h1>
                     <p class="content events-content">Vind toernooien, stages en examens in één overzicht. Gebruik de zoekbalk om snel te zoeken en filter op categorie om direct de juiste activiteit te vinden.</p>
                 </div>
                 <form method="GET" action="events.php">
-                    <!-- Keep existing type parameter active if filtering -->
                     <?php if ($type): ?>
                         <input type="hidden" name="type" value="<?= htmlspecialchars($type) ?>">
                     <?php endif; ?>

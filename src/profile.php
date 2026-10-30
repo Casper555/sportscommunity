@@ -59,7 +59,10 @@ $initials = strtoupper(substr($username, 0, 2));
         <?php include '../includes/header.php'; ?>
         <main>
             <section class="section profile-section">
-                <h1 class="title login-title">Mijn profiel</h1> 
+                <div class="back-navigation">
+                    <a href="index.php" class="back-link">&larr; Terug naar Home</a>
+                </div>
+                <h1 class="title login-title">Mijn profiel</h1>
                 <p class="content login-subtitle">Welkom, <?= htmlspecialchars($username) ?>. Bekijk je gegevens en houd je judo-evenementen bij op één plek.</p>
 
                 <?php if (!empty($successMessage)): ?>
@@ -75,6 +78,8 @@ $initials = strtoupper(substr($username, 0, 2));
                 <?php endif; ?>
 
                 <div class="profile-container">
+
+                    <!-- Left Column: Personal Data Sidebar -->
                     <div class="profile-card">
                         <div class="profile-user-header">
                             <div class="profile-avatar-badge">
@@ -87,7 +92,7 @@ $initials = strtoupper(substr($username, 0, 2));
                         </div>
 
                         <h4 class="content profile-section-heading">Persoonlijke gegevens</h4>
-                        
+
                         <p class="profile-info-label">Naam</p>
                         <p class="profile-info-value"><?= htmlspecialchars($username) ?></p>
 
@@ -95,8 +100,10 @@ $initials = strtoupper(substr($username, 0, 2));
                         <p class="profile-info-value"><?= htmlspecialchars($user['email']) ?></p>
                     </div>
 
+                    <!-- Right Column: Registered & Created Events -->
                     <div class="profile-events-area">
-                        
+
+                        <!-- Registered Events Section -->
                         <div class="profile-events-header">
                             <h2 class="title" style="font-size: 1.4rem; margin: 0;">Ingeschreven evenementen</h2>
                             <span style="color: #606B78; font-size: 0.9rem;"><?= count($registeredEvents) ?> inschrijvingen</span>
@@ -112,7 +119,7 @@ $initials = strtoupper(substr($username, 0, 2));
                                         <div class="profile-event-content">
                                             <span class="profile-event-badge"><?= htmlspecialchars($event['type']) ?></span>
                                             <h3 class="profile-event-title"><?= htmlspecialchars($event['title']) ?></h3>
-                                            
+
                                             <div class="profile-event-meta">
                                                 <div><i class="fa fa-calendar"></i> <?= date('d-m-Y', strtotime($event['event_date'])) ?></div>
                                                 <div><i class="fa fa-map-marker"></i> <?= htmlspecialchars($event['city']) ?></div>
@@ -131,6 +138,7 @@ $initials = strtoupper(substr($username, 0, 2));
                             </div>
                         <?php endif; ?>
 
+                        <!-- Created Events Section -->
                         <div class="profile-events-header">
                             <h2 class="title" style="font-size: 1.4rem; margin: 0;">Eigen evenementen</h2>
                             <span style="color: #606B78; font-size: 0.9rem;"><?= count($createdEvents) ?> evenementen</span>
@@ -148,8 +156,9 @@ $initials = strtoupper(substr($username, 0, 2));
                                             <h3 class="profile-created-title"><?= htmlspecialchars($event['title']) ?></h3>
                                             <p class="profile-created-meta"><i class="fa fa-calendar"></i> <?= date('d-m-Y', strtotime($event['event_date'])) ?> &nbsp;|&nbsp; <i class="fa fa-map-marker"></i> <?= htmlspecialchars($event['city']) ?></p>
                                         </div>
-                                        <div>
-                                            <a href="edit-event.php?id=<?= $event['id'] ?>" class="profile-created-action-link">Evenement bewerken</a> 
+                                        <div class="profile-buttons">
+                                            <a href="event-detail.php?id=<?= $event['id'] ?>" class="profile-created-action-link">Evenement bekijken &rarr;</a>
+                                            <a href="edit-event.php?id=<?= $event['id'] ?>" class="profile-created-action-link profile-edit">Evenement bewerken &rarr;</a>
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
