@@ -12,13 +12,13 @@
         <ul class="footer-list">
             <h3>Navigatie</h3>
             <li><a href="../src/events.php">Alle evenementen</a></li>
-            <li><a href="../src/events.php">Toernooien</a></li>
-            <li><a href="../src/events.php">Stages</a></li>
-            <li><a href="../src/events.php">Examens</a></li>
+            <li><a href="../src/events.php?type=Toernooi">Toernooien</a></li>
+            <li><a href="../src/events.php?type=Stage">Stages</a></li>
+            <li><a href="../src/events.php?type=Examen">Examens</a></li>
         </ul>
         <ul class="footer-list">
             <h3>Platform</h3>
-            <li><a href="../src/create_event.php">Nieuw Evenement</a></li>
+            <li><a href="../src/create-event.php">Nieuw Evenement</a></li>
             <li><a href="../src/login.php">Inloggen</a></li>
             <li><a href="../src/profile.php">Account</a></li>
         </ul>

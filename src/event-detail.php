@@ -18,34 +18,56 @@ if (!$event) {
     exit;
 }
 
-// 2. Fetch other upcoming events (excluding current event if needed)
-$newevents = getUpcomingEvents($pdo, 3);
+$userId = $_SESSION['user_id'] ?? null;
 
-$successMessage = '';
-$errorMessage = '';
+// 2. Handle Flash Messages from Session (PRG Pattern)
+$successMessage = $_SESSION['success_message'] ?? '';
+$errorMessage = $_SESSION['error_message'] ?? '';
+unset($_SESSION['success_message'], $_SESSION['error_message']);
 
-// 3. Handle registration form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_event'])) {
-    if (!isset($_SESSION['user_id'])) {
+// 3. Handle registration / unregistration form submissions
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!$userId) {
         header('Location: login.php');
         exit;
     }
 
-    $userId = $_SESSION['user_id'];
+    if (isset($_POST['register_event'])) {
+        if (registerForEvent($pdo, $userId, $event['id'])) {
+            $_SESSION['success_message'] = "Je bent succesvol ingeschreven!";
+        } else {
+            $_SESSION['error_message'] = "Inschrijven mislukt: het evenement is vol of je bent al ingeschreven.";
+        }
+    } elseif (isset($_POST['unregister_event'])) {
+        if (unregisterFromEvent($pdo, $userId, $event['id'])) {
+            $_SESSION['success_message'] = "Je bent succesvol uitgeschreven.";
+        } else {
+            $_SESSION['error_message'] = "Er is iets misgegaan bij het uitschrijven.";
+        }
+    }
 
-    if (registerForEvent($pdo, $userId, $event['id'])) {
-        $successMessage = "Je bent succesvol ingeschreven!";
-        // Re-fetch event to update participant count
-        $event = getEventById($pdo, (int)$eventId);
-    } else {
-        $errorMessage = "Je bent al ingeschreven voor dit evenement.";
+    // Redirect to self (GET request) to clean browser history
+    header('Location: event-detail.php?id=' . $event['id']);
+    exit;
+}
+
+// 4. Fetch other upcoming events (excluding the current one)
+$newevents = getUpcomingEvents($pdo, 3, $event['id']);
+
+// 5. Check user status relative to this event
+$isRegistered = false;
+$isOwner = false;
+
+if ($userId) {
+    $isRegistered = isUserRegistered($pdo, $userId, $event['id']);
+    if (isset($event['user_id'])) {
+        $isOwner = ($userId == $event['user_id']);
     }
 }
 ?>
 
-
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 
 <head>
     <meta charset="UTF-8">
@@ -59,10 +81,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_event'])) {
         <?php include '../includes/header.php'; ?>
         <main>
             <section class="section events-detail-section">
+
+                <!-- Back Link -->
+                <div class="back-navigation">
+                    <a href="events.php" class="back-link">&larr; Terug naar overzicht</a>
+                </div>
+
                 <div class="events-intro">
                     <h1 class="title events-title"><?= htmlspecialchars($event['title']) ?></h1>
                     <p class="content events-content">Bekijk alle informatie over dit evenement, controleer de beschikbaarheid en meld je direct aan vanuit deze pagina.</p>
                 </div>
+
+                <?php if (!empty($successMessage)): ?>
+                    <div style="color: #155724; background: #d4edda; border: 1px solid #c3e6cb; padding: 12px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+                        <?= htmlspecialchars($successMessage) ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($errorMessage)): ?>
+                    <div style="color: #721c24; background: #f8d7da; border: 1px solid #f5c6cb; padding: 12px; border-radius: 5px; margin-bottom: 20px; text-align: center;">
+                        <?= htmlspecialchars($errorMessage) ?>
+                    </div>
+                <?php endif; ?>
+
                 <div class="event-detail-layout">
                     <?php if ($event): ?>
                         <div class="event-card-detail">
@@ -74,18 +115,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_event'])) {
                                     <span><?= date('d-m-Y', strtotime($event['event_date'])) ?></span>
                                 </div>
                                 <div class="event-card-countgroup">
-                                    <div><?= $event['target_group'] ?> </div>
+                                    <div><?= htmlspecialchars($event['target_group']) ?></div>
                                 </div>
                                 <div class="event-detail-card-count">
                                     <div class="event-detail-count">
                                         <p class="event-detail-count-text">Beschikbaarheid</p>
                                         <?= $event['registration_count'] ?> / <?= $event['max_participants'] ?> deelnemers
-
                                     </div>
                                 </div>
                             </div>
                         </div>
                     <?php endif; ?>
+
                     <div class="event-detail-info">
                         <div class="detail event-detail-description">
                             <h3 class="event-detail-description-title">Overzicht</h3>
@@ -105,12 +146,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_event'])) {
                         </div>
 
                         <div class="event-detail-signup">
-                            <h3 class="event-detail-button-text">Dit iets voor jou?</h3>
-                            <p class="event-detail-button-text">Schrijf je hier meteen in, vol is vol. Je kunt altijd nog uitschrijven.</p>
+                            <h3 class="event-detail-button-text">Deelname</h3>
 
-                            <form method="POST" action="event-detail.php?id=<?= $event['id'] ?>">
-                                <button type="submit" name="register_event" class="event-detail-button">Inschrijven</button>
-                            </form>
+                            <?php if ($isOwner): ?>
+                                <p class="event-detail-button-text">Dit evenement is door jou georganiseerd.</p>
+                                <a href="participants.php?id=<?= $event['id'] ?>" class="event-detail-button" style="display: inline-block; text-align: center; text-decoration: none; margin-top: 10px;">
+                                    <i class="fa fa-users"></i> Bekijk inschrijvingen (<?= $event['registration_count'] ?>)
+                                </a>
+                            <?php elseif ($isRegistered): ?>
+                                <p class="event-detail-button-text">Je bent momenteel ingeschreven voor dit evenement.</p>
+                                <form method="POST" action="event-detail.php?id=<?= $event['id'] ?>">
+                                    <button type="submit" name="unregister_event" class="event-detail-button unregister-button">Uitschrijven</button>
+                                </form>
+                            <?php elseif ($event['max_participants'] !== null && $event['registration_count'] >= $event['max_participants']): ?>
+                                <p class="event-detail-button-text" style="color: #c62828; font-weight: bold;">Dit evenement is vol.</p>
+                                <button type="button" class="event-detail-button" disabled style="opacity: 0.6; cursor: not-allowed;">Vol</button>
+                            <?php else: ?>
+                                <p class="event-detail-button-text">Schrijf je hier meteen in, vol is vol. Je kunt altijd nog uitschrijven.</p>
+                                <form method="POST" action="event-detail.php?id=<?= $event['id'] ?>">
+                                    <button type="submit" name="register_event" class="event-detail-button">Inschrijven</button>
+                                </form>
+                            <?php endif; ?>
                         </div>
 
                         <div class="detail event-detail-organisation">
@@ -120,7 +176,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_event'])) {
                             <p class="event-detail-organisator-info"><?= htmlspecialchars($event['organizer_name'] ?? 'Onbekend') ?></p>
 
                             <h4 class="event-detail-contact">Contact</h4>
-                            <p class="event-detail-contact-info"><?= htmlspecialchars($event['organizer_email'] ?? 'Geen e-mail bekend') ?></p>
+                            <p class="event-detail-contact-info"><?= htmlspecialchars($event['contact_email'] ?? 'Geen e-mail bekend') ?></p>
 
                             <h4 class="event-detail-group">Doelgroep</h4>
                             <p class="event-detail-group-info"><?= htmlspecialchars($event['target_group']) ?></p>
@@ -130,27 +186,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['register_event'])) {
                         </div>
                     </div>
                 </div>
+
                 <div class="event-detail-events-title">
-                    <h2 class="title ">Andere evenementen</h2>
+                    <h2 class="title">Andere evenementen</h2>
                 </div>
                 <div class="event-detail-events">
                     <?php if (empty($newevents)): ?>
                         <p>Er zijn op dit moment geen komende evenementen.</p>
                     <?php else: ?>
-                        <?php foreach ($newevents as $event): ?>
+                        <?php foreach ($newevents as $newEvent): ?>
                             <div class="event-card">
-                                <img class="event-card-image" src="../assets/images/<?= htmlspecialchars($event['image']) ?>" alt="Event image">
+                                <img class="event-card-image" src="../assets/images/<?= htmlspecialchars($newEvent['image']) ?>" alt="Event image">
                                 <div class="event-card-content">
-                                    <?= htmlspecialchars($event['title']) ?>
+                                    <?= htmlspecialchars($newEvent['title']) ?>
                                     <div class="event-card-placetime">
-                                        <?= htmlspecialchars($event['city']) ?>
-                                        <?= date('d-m-Y', strtotime($event['event_date'])) ?>
+                                        <?= htmlspecialchars($newEvent['city']) ?>
+                                        <?= date('d-m-Y', strtotime($newEvent['event_date'])) ?>
                                     </div>
                                     <div class="event-card-countgroup">
-                                        <div><?= $event['registration_count'] ?> / <?= $event['max_participants'] ?> deelnemers</div>
-                                        <div><?= $event['target_group'] ?> </div>
+                                        <div><?= $newEvent['registration_count'] ?> / <?= $newEvent['max_participants'] ?> deelnemers</div>
+                                        <div><?= htmlspecialchars($newEvent['target_group']) ?></div>
                                     </div>
-                                    <a class="event-card-button" href="event-detail.php?id=<?= $event['id'] ?>">Meer info & inschrijven</a>
+                                    <a class="event-card-button" href="event-detail.php?id=<?= $newEvent['id'] ?>">Meer info & inschrijven</a>
                                 </div>
                             </div>
                         <?php endforeach; ?>

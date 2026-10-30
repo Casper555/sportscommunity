@@ -5,33 +5,28 @@ require_once '../includes/functions.php';
 
 $events = getUpcomingEvents($pdo, 3);
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../assets/css/style.css">
-    <title>Homepagina</title>
+    <title>Document</title>
 </head>
-
 <body>
     <div class="page-shell">
         <?php include '../includes/header.php'; ?>
         <main>
             <section class="section section-homepage">
                 <div class="homepage-intro">
-                    <h1 class="title homepage-hero-title">Judocommunity</h1>
-                    <h3 class="subtitle homepage-hero-subtitle">Jouw centrale plek voor alle judo-evenementen, toernooien en stages.</h3>
-                    <p class="content homepage-hero-content">Of je nu op zoek bent naar je volgende toernooi, wilt deelnemen aan een inspirerende judostage, of jezelf voorbereidt op je volgende dan-examen: op de Judo Sportscommunity vind je alle evenementen overzichtelijk op één plek. Bekijk het actuele aanbod, schrijf je direct in en blijf verbonden met de judocommunity.
-                        <br><br>Organiseer je zelf een toernooi of clubactiviteit? Maak binnen een minuut een account aan en plaats jouw evenement direct op het platform.
-                    </p>
+                    <h1 class="homepage-hero-title">Judocommunity</h1>
+                    <h3 class="homepage-hero-subtitle">Jouw centrale plek voor alle judo-evenementen, toernooien en stages.</h3>
+                    <p class="homepage-hero-content">Of je nu op zoek bent naar je volgende toernooi, wilt deelnemen aan een inspirerende judostage, of jezelf voorbereidt op je volgende dan-examen: op de Judo Sportscommunity vind je alle evenementen overzichtelijk op één plek. Bekijk het actuele aanbod, schrijf je direct in en blijf verbonden met de judocommunity.
+                    <br><br>Organiseer je zelf een toernooi of clubactiviteit? Maak binnen een minuut een account aan en plaats jouw evenement direct op het platform.</p>
                 </div>
-                <a class="homepage-hero-button" href="./events.php">Bekijk evenementen
-                    <img class="homepage-hero-button-arrow" src="../assets/images/arrow.png">
-                </a>
+                    <a class="homepage-hero-button" href="./events.php">Bekijk evenementen
+                        <img class="homepage-hero-button-arrow" src="../assets/images/arrow.png">
+                    </a>
             </section>
 
             <section class="section section-homepage-events">
@@ -46,8 +41,8 @@ $events = getUpcomingEvents($pdo, 3);
                                 <div class="event-card-content">
                                     <?= htmlspecialchars($event['title']) ?>
                                     <div class="event-card-placetime">
-                                        <?= htmlspecialchars($event['city']) ?>
-                                        <?= date('d-m-Y', strtotime($event['event_date'])) ?>
+                                        <div><?= htmlspecialchars($event['city']) ?></div>
+                                        <div><?= date('d-m-Y', strtotime($event['event_date'])) ?></div>
                                     </div>
                                     <div class="event-card-countgroup">
                                         <div><?= $event['registration_count'] ?> / <?= $event['max_participants'] ?> deelnemers</div>
@@ -63,15 +58,15 @@ $events = getUpcomingEvents($pdo, 3);
             <section class="section section-homepage-catagories">
                 <h1 class="homepage-catagories-title">Catagoriën</h1>
                 <div class="homepage-catagories-cards-wrap">
-                    <a href="./events.php" class="catagories-card">
+                    <a href="./events.php?type=Toernooi" class="catagories-card">
                         <img class="event-card-image" src="../assets/images/judo.jpeg">
                         <h6 class="catagories-card-title">Tournooien</h6>
                     </a>
-                    <a href="./events.php" class="catagories-card">
+                     <a href="./events.php?type=Stage" class="catagories-card">
                         <img class="event-card-image" src="../assets/images/judo.jpeg">
                         <h6 class="catagories-card-title">Stages & Trainingen</h6>
                     </a>
-                    <a href="./events.php" class="catagories-card">
+                     <a href="./events.php?type=Examen" class="catagories-card">
                         <img class="event-card-image" src="../assets/images/judo.jpeg">
                         <h6 class="catagories-card-title">Examens</h6>
                     </a>
@@ -82,5 +77,4 @@ $events = getUpcomingEvents($pdo, 3);
         <?php include '../includes/footer.php'; ?>
     </div>
 </body>
-
 </html>
